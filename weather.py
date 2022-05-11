@@ -3,7 +3,8 @@ import json
 import mysql.connector
 
 def write_data_to_db(username, password, host, file_name):
-    db = input("Enter a Database: ")
+    print("Writing data to database...")
+    db = input("Enter a Database you want data written to: ")
     mydb = mysql.connector.connect(
         user=username, 
         password=password,
@@ -35,10 +36,10 @@ def write_data_to_db(username, password, host, file_name):
         mycursor.execute(insert, val)
 
     mydb.commit()
-    print("Successfully saved all data to database \n")
+    print("Successfully saved all data to the {} database \n".format(db))
 
 def show_data_from_db(username, password, host_ip):
-    db = input("Enter a Database: ")
+    db = input("Enter a Database to display all data: ")
     mydb = mysql.connector.connect(
         user=username, 
         password=password,
@@ -50,7 +51,7 @@ def show_data_from_db(username, password, host_ip):
     myresult = mycursor.fetchall()
     for x in myresult:
         print(x)
-
+ 
 def fetch_weather_report(file_name):
     api_key = "3cb067f899a8c989f711fbb5e9444c3c"
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
@@ -58,7 +59,7 @@ def fetch_weather_report(file_name):
     position = ['First', 'Second', 'Third']
 
     for i in position:
-        city_name = input("Enter {} city name : ".format(i))
+        city_name = input("Enter {} city name to get weather information: ".format(i))
 
         complete_url = base_url + "appid=" + api_key + "&q=" + city_name
 
@@ -79,6 +80,8 @@ def main():
 
     write_data_to_db(user, password, host, file)
     
-    show_data_from_db(user, password, host)
+    read_db = (input('Do you wish to read data from the database[Y / N]: ')).lower()
+    if(read_db == 'yes' or read_db == 'y'):
+        show_data_from_db(user, password, host)
 
 main()
