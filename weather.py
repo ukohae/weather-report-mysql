@@ -2,24 +2,8 @@ import requests
 import json
 import mysql.connector
 
-DB_Name = input(str("Enter a Database: "))
-api_key = "3cb067f899a8c989f711fbb5e9444c3c"
-base_url = "http://api.openweathermap.org/data/2.5/weather?"
-locations = []
-position = ['First', 'Second', 'Third']
-
-for i in range(3):
-    city_name = input("Enter {} city name : ".format(position[i]))
-
-    complete_url = base_url + "appid=" + api_key + "&q=" + city_name
-
-    response = requests.get(complete_url)
-
-    locations.append(response.json())
-
-file = (json.dumps(locations))
-
-def write_data_to_db(username, password, host):
+def write_data_to_db(username, password, host, file_name):
+    db = input("Enter a Database: ")
     mydb = mysql.connector.connect(
         user=username, 
         password=password,
@@ -27,28 +11,34 @@ def write_data_to_db(username, password, host):
     )
     mycursor = mydb.cursor()
     try: 
-        mycursor.execute("CREATE DATABASE {}".format(DB_Name))
+        mycursor.execute("CREATE DATABASE {}".format(db))
     except mysql.connector.Error as err:
         print("Failed creating database: {}".format(err))
         exit(1)
-    mycursor.execute("USE {}".format(DB_Name))
+    mycursor.execute("USE {}".format(db))
     mycursor.execute("CREATE TABLE locations (name VARCHAR(255), temp VARCHAR(255), country VARCHAR(255), weather_desc VARCHAR(255))")
-    data = json.loads(file)
 
+    with open(file_name, 'r') as file:
+        print("Pulling current weather information from {} \n".format(file_name))
+        data = json.load(file)
+
+    print("Saving the following data in the database")
     for info in data:
-        print()
-        print("name:", info['name'])
-        print('temp:', info['main']['temp'])
-        print('country:', info['sys']['country'])
+        print("name:", info['name'], end="\t")
+        print('temp:', info['main']['temp'], end="\t")
+        print('country:', info['sys']['country'], end="\t")
         print('weather_desc:', info['weather'][0]['description'])
+        print()
 
         insert = "INSERT INTO locations (name, temp, country, weather_desc) VALUES (%s, %s, %s, %s)"
         val = (info['name'], info['main']['temp'], info['sys']['country'], info['weather'][0]['description'])
         mycursor.execute(insert, val)
-    mydb.commit()
-    print("Successfully written to database \n")
 
-def show_data_from_db(username, password, host_ip, db):
+    mydb.commit()
+    print("Successfully saved all data to database \n")
+
+def show_data_from_db(username, password, host_ip):
+    db = input("Enter a Database: ")
     mydb = mysql.connector.connect(
         user=username, 
         password=password,
@@ -61,12 +51,34 @@ def show_data_from_db(username, password, host_ip, db):
     for x in myresult:
         print(x)
 
+def fetch_weather_report(file_name):
+    api_key = "3cb067f899a8c989f711fbb5e9444c3c"
+    base_url = "http://api.openweathermap.org/data/2.5/weather?"
+    locations = []
+    position = ['First', 'Second', 'Third']
+
+    for i in position:
+        city_name = input("Enter {} city name : ".format(i))
+
+        complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+
+        response = requests.get(complete_url)
+
+        locations.append(response.json())
+
+    with open(file_name, "w") as file:
+        file.write(json.dumps(locations))
+
 def main():
+    file = 'configuration.json'
     user='emmanuel'
     password='101Ginger!'  
     host='127.0.0.1'
-    database=DB_Name
-    write_data_to_db(user, password, host)
-    show_data_from_db(user, password, host, database)
+
+    fetch_weather_report(file)
+
+    write_data_to_db(user, password, host, file)
+    
+    show_data_from_db(user, password, host)
 
 main()
