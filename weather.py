@@ -73,17 +73,28 @@ def show_data_from_db(username, password, host_ip):
 
 
 def fetch_weather_report(file_name):
+    def validate_location(location, pos):
+
+        complete_url = base_url + "appid=" + api_key + "&q=" + location
+        response = requests.get(complete_url)
+        # print(response.json())
+        data = response.json()
+        if (data['cod'] != '404'):
+            locations.append(data)
+        else:
+            print(data['message'])
+            city_name = input("Re-enter {} location name: ".format(pos))
+            validate_location(city_name, pos)
+
     api_key = "3cb067f899a8c989f711fbb5e9444c3c"
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
     locations = []
-    position = ['First', 'Second', 'Third']
+    positions = ['First', 'Second', 'Third']
 
-    for i in position:
+    for position in positions:
         city_name = input(
-            "Enter {} city name to get weather information: ".format(i))
-        complete_url = base_url + "appid=" + api_key + "&q=" + city_name
-        response = requests.get(complete_url)
-        locations.append(response.json())
+            "Enter {} location to get weather information: ".format(position))
+        validate_location(city_name, position)
 
     with open(file_name, "w") as file:
         file.write(json.dumps(locations))
