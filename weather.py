@@ -77,13 +77,12 @@ def fetch_weather_report(file_name):
 
         complete_url = base_url + "appid=" + api_key + "&q=" + location
         response = requests.get(complete_url)
-        # print(response.json())
         data = response.json()
         if (data['cod'] != '404'):
             locations.append(data)
         else:
             print(data['message'])
-            city_name = input("Re-enter {} location name: ".format(pos))
+            city_name = input("Re-enter {} location: ".format(pos))
             validate_location(city_name, pos)
 
     api_key = "3cb067f899a8c989f711fbb5e9444c3c"
@@ -93,7 +92,7 @@ def fetch_weather_report(file_name):
 
     for position in positions:
         city_name = input(
-            "Enter {} location to get weather information: ".format(position))
+            "Enter {} location: ".format(position))
         validate_location(city_name, position)
 
     with open(file_name, "w") as file:
