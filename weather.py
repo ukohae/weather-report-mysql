@@ -6,7 +6,6 @@ from mysql.connector import errorcode
 
 def write_data_to_db(username, password, host, file_name, db):
     try:
-        
         mydb = mysql.connector.connect(
             user=username,
             password=password,
@@ -40,7 +39,7 @@ def write_data_to_db(username, password, host, file_name, db):
         mydb.commit()
         print("Successfully saved all data to the {} database \n".format(db))
     except mysql.connector.Error as err:
-        print("Failed creating database: {}".format(err))
+        print("Failed creating database: The name {} is invalid".format(db))
         database = input("Re-enter a Database: ")
         write_data_to_db(username, password, host, file_name, database)
     except KeyError:
@@ -84,7 +83,7 @@ def fetch_weather_report(file_name):
             locations.append(data)
         else:
             print(data['message'])
-            city_name = input("Re-enter {} location: ".format(pos))
+            city_name = input("Re-enter {} Location: ".format(pos))
             validate_location(city_name, pos)
 
     api_key = "3cb067f899a8c989f711fbb5e9444c3c"
@@ -94,12 +93,11 @@ def fetch_weather_report(file_name):
 
     for position in positions:
         city_name = input(
-            "Enter {} location: ".format(position))
+            "Enter {} Location: ".format(position))
         validate_location(city_name, position)
 
     with open(file_name, "w") as file:
         file.write(json.dumps(locations))
-        
     print()
 
 
