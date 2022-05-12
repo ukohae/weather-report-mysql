@@ -1,6 +1,7 @@
 import requests
 import json
 import mysql.connector
+from mysql.connector import errorcode
 
 def write_data_to_db(username, password, host, file_name):
     print("Writing data to database...")
@@ -39,18 +40,29 @@ def write_data_to_db(username, password, host, file_name):
     print("Successfully saved all data to the {} database \n".format(db))
 
 def show_data_from_db(username, password, host_ip):
-    db = input("Enter a Database to display all data: ")
-    mydb = mysql.connector.connect(
-        user=username, 
-        password=password,
-        host=host_ip,
-        database=db
-    )
-    mycursor = mydb.cursor()
-    mycursor.execute("SELECT * from locations")
-    myresult = mycursor.fetchall()
-    for x in myresult:
-        print(x)
+    while True:
+        try:
+            db = input("Enter a Database to display all data: ")
+            mydb = mysql.connector.connect(
+                user=username, 
+                password=password,
+                host=host_ip,
+                database=db
+            )
+            mycursor = mydb.cursor()
+
+            mycursor.execute("SELECT * from locations")
+            myresult = mycursor.fetchall()
+            for x in myresult:
+                print(x)
+        except mysql.connector.ProgrammingError as err:
+            if err.errno == errorcode.ER_SYNTAX_ERROR:
+                print("Check your syntax!")
+            else:
+                print("Error: {}".format(err))
+            continue
+        else:
+            break
  
 def fetch_weather_report(file_name):
     api_key = "3cb067f899a8c989f711fbb5e9444c3c"
