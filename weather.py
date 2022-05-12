@@ -4,10 +4,9 @@ import mysql.connector
 from mysql.connector import errorcode
 
 
-def write_data_to_db(username, password, host, file_name):
+def write_data_to_db(username, password, host, file_name, db):
     try:
-        print("Writing data to database...")
-        db = input("Enter a Database you want data written to: ")
+        
         mydb = mysql.connector.connect(
             user=username,
             password=password,
@@ -18,6 +17,8 @@ def write_data_to_db(username, password, host, file_name):
         mycursor.execute("USE {}".format(db))
         mycursor.execute(
             "CREATE TABLE locations (name VARCHAR(255), temp VARCHAR(255), country VARCHAR(255), weather_desc VARCHAR(255))")
+
+        print("Writing data to database...")
 
         with open(file_name, 'r') as file:
             print("Pulling current weather information from {} \n".format(file_name))
@@ -40,7 +41,8 @@ def write_data_to_db(username, password, host, file_name):
         print("Successfully saved all data to the {} database \n".format(db))
     except mysql.connector.Error as err:
         print("Failed creating database: {}".format(err))
-        exit(1)
+        database = input("Re-enter a Database: ")
+        write_data_to_db(username, password, host, file_name, database)
     except KeyError:
         print("Failed getting data from api")
         exit(1)
@@ -97,6 +99,8 @@ def fetch_weather_report(file_name):
 
     with open(file_name, "w") as file:
         file.write(json.dumps(locations))
+        
+    print()
 
 
 def main():
@@ -105,7 +109,9 @@ def main():
     password = '101Ginger!'
     host = '127.0.0.1'
     fetch_weather_report(file)
-    write_data_to_db(user, password, host, file)
+
+    database = input("Enter a Database you want data written to: ")
+    write_data_to_db(user, password, host, file, database)
     read_db = (
         input('Do you wish to read data from the database[Y / N]: ')).lower()
     if(read_db == 'yes' or read_db == 'y'):
