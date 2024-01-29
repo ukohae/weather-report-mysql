@@ -1,7 +1,3 @@
 output "jenkins_ssh" {
-  value = "ssh -i '${module.unique_name.unique}.pem' ubuntu@${module.jenkins.ip_address}"
-}
-
-output "jenkins_browser" {
-  value = "${module.jenkins.ip_address}:8080"
+  value = "ssh -i '${module.unique_name.unique}.pem' ec2-user@${module.mysql.ip_address}"
 }
