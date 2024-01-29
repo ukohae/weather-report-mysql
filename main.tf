@@ -24,7 +24,7 @@ module "aws_key" {
   key_name = module.unique_name.unique
 }
 
-resource "null_resource" "generated_key" {
+resource "terraform_data" "generated_key" {
   provisioner "local-exec" {
     command = <<-EOT
         echo '${module.aws_key.private_key}' > ./'${module.unique_name.unique}'.pem
