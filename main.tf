@@ -32,3 +32,19 @@ resource "terraform_data" "generated_key" {
       EOT
   }
 }
+
+
+resource "terraform_data" "copy_script" {
+  provisioner "file" {
+    source      = "scripts/weather.py"
+    destination = "weather.py"
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "ec2-user"
+    private_key = file("${module.unique_name.unique}.pem")
+    host        = module.mysql.ip_address
+  }
+  depends_on = [terraform_data.generated_key]
+}
