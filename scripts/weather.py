@@ -23,7 +23,7 @@ def write_data_to_db(username, password, host, file_name, db):
             print("Pulling current weather information from {} \n".format(file_name))
             data = json.load(file)
 
-        print("Saving the following data in the database")
+        print("Saving the information to the database...")
         for info in data:
             print("name:", info['name'], end="\t")
             kelvin_temp = float(info['main']['temp'])
@@ -110,7 +110,25 @@ def main():
     host = '127.0.0.1'
     fetch_weather_report(file)
 
-    database = input("Enter a Database you want data written to: ")
+    database = (
+        input("Do you want to save data to a database?[Y / N]: ")).lower()
+    if(database == 'no' or database == 'n'):
+
+        with open(file, 'r') as file:
+            print("Pulling current weather information from backend... \n".format(file))
+            data = json.load(file)
+
+        for info in data:
+            print("name:", info['name'], end="\t")
+            kelvin_temp = float(info['main']['temp'])
+            celsius_temp = kelvin_temp - 273.15
+            print('temp (Celsius): {:.2f}'.format(celsius_temp), end="\t")
+            print('country:', info['sys']['country'], end="\t")
+            print('weather_desc:', info['weather'][0]['description'])
+            print()
+        quit()
+    else:
+        database = input("Enter a Database you want data written to: ")
     write_data_to_db(user, password, host, file, database)
     read_db = (
         input('Do you wish to read data from the database[Y / N]: ')).lower()
