@@ -1,4 +1,4 @@
-# Weather Report with MySQL and Python [![Deployment](https://github.com/ukohae/weather-report-mysql/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ukohae/weather-report-mysql/actions/workflows/pipeline.yml)
+# Weather Report with MySQL and Python [![MySQL Deployment](https://github.com/ukohae/weather-report-mysql/actions/workflows/pipeline.yml/badge.svg)](https://github.com/ukohae/weather-report-mysql/actions/workflows/pipeline.yml)
 
 ![Terraform](https://img.shields.io/badge/terraform-%235835CC.svg?style=for-the-badge&logo=terraform&logoColor=white) 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) 
