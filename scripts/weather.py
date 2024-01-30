@@ -103,8 +103,8 @@ def fetch_weather_report(file_name):
 
 def main():
     file = 'configuration.json'
-    user = 'emmanuel'
-    password = '101Ginger!'
+    user = 'root'
+    password = '123a'
     host = '127.0.0.1'
     fetch_weather_report(file)
 
