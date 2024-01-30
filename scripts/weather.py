@@ -84,17 +84,18 @@ def fetch_weather_report(file_name):
             locations.append(data)
         else:
             print(data['message'])
-            city_name = input("Re-enter {} Location: ".format(pos))
+            city_name = input("Re-enter {} location: ".format(pos))
             validate_location(city_name, pos)
 
     api_key = "3cb067f899a8c989f711fbb5e9444c3c"
     base_url = "http://api.openweathermap.org/data/2.5/weather?"
     locations = []
-    positions = ['First', 'Second', 'Third']
+    positions = ['first', 'second', 'third']
 
     for position in positions:
         city_name = input(
-            "Enter {} Location: ".format(position))
+            "Enter the name of the {} location: ".format(position))
+        print("Saving {} place to database...".format(position))
         validate_location(city_name, position)
 
     with open(file_name, "w") as file:

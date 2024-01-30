@@ -40,6 +40,8 @@ terraform init && terraform apply --auto-approve
 ```
 python3 weather.py
 ```
+### Sample Database Output
+![database](./images/db_output.png)
 
 ## Destroy all resources
 - Exit out of the database
