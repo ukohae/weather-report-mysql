@@ -26,14 +26,15 @@ def write_data_to_db(username, password, host, file_name, db):
         print("Saving the following data in the database")
         for info in data:
             print("name:", info['name'], end="\t")
-            print('temp:', info['main']['temp'], end="\t")
+            kelvin_temp = float(info['main']['temp'])
+            celsius_temp = kelvin_temp - 273.15
+            print('temp (Celsius): {:.2f}'.format(celsius_temp), end="\t")
             print('country:', info['sys']['country'], end="\t")
             print('weather_desc:', info['weather'][0]['description'])
             print()
 
             insert = "INSERT INTO locations (name, temp, country, weather_desc) VALUES (%s, %s, %s, %s)"
-            val = (info['name'], info['main']['temp'], info['sys']
-                   ['country'], info['weather'][0]['description'])
+            val = (info['name'], celsius_temp, info['sys']['country'], info['weather'][0]['description'])
             mycursor.execute(insert, val)
 
         mydb.commit()
