@@ -34,14 +34,19 @@ source venv/bin/activate
 ```
 terraform init && terraform apply --auto-approve
 ```
-- Give it `4 minutes` to provision the `MySQL Server`.
+- Give it `10 minutes` to provision the `MySQL Server`.
 
-- After `4 minutes`, `SSH` into the `MySQL Server` and run the `weather.py` script
+- After `10 minutes`, `SSH` into the `MySQL Server`
+- Validate MySQL is installed by runnining
+```
+mysql -V
+```
+- Run the `weather.py` script
 ```
 python3 weather.py
 ```
 ### Sample Database Output
-![database](./images/db_output.png)
+![database](./images/database_output.png)
 
 ## Destroy all resources
 - Exit out of the database
