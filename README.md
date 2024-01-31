@@ -46,7 +46,7 @@ mysql -V
 python3 weather.py
 ```
 ### Sample Database Output
-![database](./images/database_output.png)
+![database](./images/mysql-output.png)
 
 ## Destroy all resources
 - Exit out of the database
